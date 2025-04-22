@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import math
 """Return the floor of the float as an integer"""
+import math
 
 
 def floor(n: float) -> int:
