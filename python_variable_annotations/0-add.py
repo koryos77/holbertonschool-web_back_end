@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Return sum of 2 floats"""
 
 
 def add(a: float, b: float) -> float:
