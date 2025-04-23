@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """wait_random will sapwn n times with the specified max_delay"""
-wait_random = __import__('0-basic_async_syntax').wait_random
 from typing import List
 import asyncio
+wait_random = __import__('0-basic_async_syntax').wait_random
 
 
 async def wait_n(n: int, max_delay: int) -> List[float]:
