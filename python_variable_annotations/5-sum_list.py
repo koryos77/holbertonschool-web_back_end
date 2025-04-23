@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""This module defines a type-annotated function that returns 
+"""This module defines a type-annotated function that returns
 the sum of a list of floating-point numbers."""
 
 
 from typing import List
+
 
 def sum_list(input_list: List[float]) -> float:
     """

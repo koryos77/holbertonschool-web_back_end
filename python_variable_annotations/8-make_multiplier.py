@@ -2,7 +2,9 @@
 """This module defines a function that returns a multiplier function
 using closures and type annotations."""
 
+
 from typing import Callable
+
 
 def make_multiplier(multiplier: float) -> Callable[[float], float]:
     """
