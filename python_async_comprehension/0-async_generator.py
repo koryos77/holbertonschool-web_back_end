@@ -3,8 +3,7 @@
 Coroutine called async_generator that takes no arguments.
 """
 
-
-from typing import Generator, AsyncGenerator
+from typing import AsyncGenerator
 import random
 import asyncio
 
