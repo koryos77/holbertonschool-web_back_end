@@ -17,11 +17,11 @@ async def measure_runtime():
     measure_runtime should measure the total runtime and return it.
     Notice that the total runtime is roughly 10 seconds,
     """
-    start_time = time.time()
+    start_time = time.perf_counter()
     await asyncio.gather(
         async_comprehension(),
         async_comprehension(),
         async_comprehension(),
         async_comprehension()
     )
-    return time.time() - start_time
+    return time.perf_counter() - start_time
