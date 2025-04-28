@@ -24,4 +24,5 @@ async def measure_runtime():
         async_comprehension(),
         async_comprehension()
     )
-    return time.perf_counter() - start_time
+    end_time = time.perf_counter() - start_time
+    return end_time
