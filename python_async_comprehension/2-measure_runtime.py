@@ -17,10 +17,8 @@ async def measure_runtime():
     measure_runtime should measure the total runtime and return it.
     Notice that the total runtime is roughly 10 seconds,
     """
-    start_time = time.perf_counter()
-    for task in range(4):
-        await asyncio.gather(
-            async_comprehension()
-            )
-    end_time = time.perf_counter() - start_time
-    return end_time
+    start_time = asyncio.get_running_loop().time()
+    tasks = [async_comprehension() for _ in range(4)]
+    await asyncio.gather(*tasks)
+    end_time = asyncio.get_running_loop().time()
+    return end_time - start_time
