@@ -8,55 +8,47 @@ function countStudents(path) {
         reject(new Error('Cannot load the database'));
         return;
       }
-      const lines = data.split('\n').filter(line => line.trim() !== '');
+
+      const lines = data.split('\n').filter((line) => line.trim() !== '');
       if (lines.length <= 1) {
         resolve('Number of students: 0');
         return;
       }
-      const header = lines[0].split(',');
+
       const students = lines.slice(1);
       const fields = {};
-      students.forEach(line => {
-        const student = line.split(',');
-        if (student.length === header.length) {
-          const field = student[student.length - 1].trim();
-          const firstname = student[0].trim();
-          if (!fields[field]) fields[field] = [];
-          fields[field].push(firstname);
-        }
+      students.forEach((line) => {
+        const [firstName, , , field] = line.split(',');
+        if (!fields[field]) fields[field] = [];
+        fields[field].push(firstName);
       });
-      let output = `Number of students: ${students.length}`;
+
+      let output = `Number of students: ${students.length}\n`;
       for (const [field, names] of Object.entries(fields)) {
-        output += `\nNumber of students in ${field}: ${names.length}. List: ${names.join(', ')}`;
+        output += `Number of students in ${field}: ${
+          names.length
+        }. List: ${names.join(', ')}\n`;
       }
-      resolve(output);
+      resolve(output.trim());
     });
   });
 }
 
-const database = process.argv[2];
-
 const app = http.createServer((req, res) => {
-  res.setHeader('Content-Type', 'text/plain');
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+
   if (req.url === '/') {
-    res.statusCode = 200;
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
-    res.statusCode = 200;
+    const dbPath = process.argv[2];
     res.write('This is the list of our students\n');
-    countStudents(database)
-      .then((output) => {
-        res.end(output);
-      })
-      .catch((err) => {
-        res.end(err.message);
-      });
+    countStudents(dbPath)
+      .then((data) => res.end(data))
+      .catch((err) => res.end(err.message));
   } else {
-    res.statusCode = 404;
-    res.end('Not found');
+    res.end();
   }
 });
 
 app.listen(1245);
-
 module.exports = app;

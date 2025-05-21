@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 
+const app = express();
+
 function countStudents(path) {
   return new Promise((resolve, reject) => {
     fs.readFile(path, 'utf8', (err, data) => {
@@ -8,52 +10,46 @@ function countStudents(path) {
         reject(new Error('Cannot load the database'));
         return;
       }
-      const lines = data.split('\n').filter(line => line.trim() !== '');
+
+      const lines = data.split('\n').filter((line) => line.trim() !== '');
       if (lines.length <= 1) {
         resolve('Number of students: 0');
         return;
       }
-      const header = lines[0].split(',');
+
       const students = lines.slice(1);
       const fields = {};
-      students.forEach(line => {
-        const student = line.split(',');
-        if (student.length === header.length) {
-          const field = student[student.length - 1].trim();
-          const firstname = student[0].trim();
-          if (!fields[field]) fields[field] = [];
-          fields[field].push(firstname);
-        }
+      students.forEach((line) => {
+        const [firstName, , , field] = line.split(',');
+        fields[field] = fields[field] || [];
+        fields[field].push(firstName);
       });
-      let output = `Number of students: ${students.length}`;
+
+      let output = `Number of students: ${students.length}\n`;
       for (const [field, names] of Object.entries(fields)) {
-        output += `\nNumber of students in ${field}: ${names.length}. List: ${names.join(', ')}`;
+        output += `Number of students in ${field}: ${
+          names.length
+        }. List: ${names.join(', ')}\n`;
       }
-      resolve(output);
+      resolve(output.trim());
     });
   });
 }
 
-const database = process.argv[2];
-
-const app = express();
-
 app.get('/', (req, res) => {
-  res.type('text/plain');
-  res.send('Hello Holberton School!');
+  res.type('text').send('Hello Holberton School!');
 });
 
 app.get('/students', (req, res) => {
-  res.type('text/plain');
-  countStudents(database)
-    .then((output) => {
-      res.send(`This is the list of our students\n${output}`);
+  const dbPath = process.argv[2];
+  countStudents(dbPath)
+    .then((data) => {
+      res.type('text').send(`This is the list of our students\n${data}`);
     })
     .catch((err) => {
-      res.send(`This is the list of our students\n${err.message}`);
+      res.type('text').send(`This is the list of our students\n${err.message}`);
     });
 });
 
 app.listen(1245);
-
 module.exports = app;
